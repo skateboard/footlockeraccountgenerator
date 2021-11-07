@@ -4,12 +4,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.brennan.footlocker.FootLocker;
 import me.brennan.footlocker.model.Account;
+import me.brennan.footlocker.proxy.Proxy;
 import me.brennan.footlocker.request.CustomCookieJar;
 import me.brennan.footlocker.request.JsonBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import java.net.InetSocketAddress;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -28,9 +30,21 @@ public class CreateAccountTask implements Runnable {
     private final Pattern EMAIL_PATTERN = Pattern.compile("activationToken=(.*)");
 
     public CreateAccountTask() {
-        this.httpClient = new OkHttpClient.Builder()
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new CustomCookieJar())
-                .build();
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+
+        final Proxy proxy = FootLocker.INSTANCE.getProxyManager().randomProxy();
+        if (proxy != null) {
+            builder.proxy(new java.net.Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(proxy.getIp(), proxy.getPort())));
+            if (proxy.getAuthenticator() != null) {
+                builder.proxyAuthenticator(proxy.getAuthenticator());
+            }
+        }
+
+        this.httpClient = builder.build();
     }
 
     @Override

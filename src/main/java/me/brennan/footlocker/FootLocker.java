@@ -3,6 +3,7 @@ package me.brennan.footlocker;
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import me.brennan.footlocker.gmail.GmailService;
+import me.brennan.footlocker.proxy.ProxyManager;
 import me.brennan.footlocker.task.CreateAccountTask;
 import me.brennan.footlocker.util.CSVWriter;
 import me.brennan.footlocker.util.config.Config;
@@ -29,10 +30,14 @@ public enum FootLocker {
 
     private CSVWriter writer;
 
+    private ProxyManager proxyManager;
 
     public void start() throws Exception {
         loadConfig();
         this.gmailService = new GmailService();
+
+        this.proxyManager = new ProxyManager();
+        System.out.println("loaded " + proxyManager.size() + " proxies!");
 
         this.writer = new CSVWriter("created_accounts.csv");
         this.writer.write(new String[]{"Email", "First", "Last", "Phone", "Password"});
@@ -50,6 +55,10 @@ public enum FootLocker {
 
         for (int i = 0; i < threads; i++)
             executorService.submit(new CreateAccountTask());
+    }
+
+    public ProxyManager getProxyManager() {
+        return proxyManager;
     }
 
     public Config getConfig() {
