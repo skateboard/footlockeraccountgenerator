@@ -5,3 +5,4 @@ gradle
 tokens
 credentials.json
 config.json
+created_accounts.csv

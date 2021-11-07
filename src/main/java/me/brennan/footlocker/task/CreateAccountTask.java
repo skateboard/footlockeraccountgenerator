@@ -62,6 +62,7 @@ public class CreateAccountTask implements Runnable {
                     csrfToken = generateSession();
 
                     if (activateAccount(csrfToken, activationToken)) {
+                        System.out.println("Created account: " + createdAccount.getEmail());
                         createdAccount.write();
                     } else {
                         System.out.println("Failed to activate account: " + createdAccount);
@@ -106,7 +107,9 @@ public class CreateAccountTask implements Runnable {
         final String lastName = FootLocker.INSTANCE.getLastName();
         final String phoneNumber = FootLocker.INSTANCE.getPhoneNumber();
         final String email = firstName + "_" + lastName + "@" + FootLocker.INSTANCE.getConfig().getCatchAllEmail();
-        final String password = firstName + "PasswordFootLocker!";
+        final String password = firstName + "1969!";
+
+        System.out.println(password);
 
         final JsonObject body = new JsonObject();
         body.addProperty("bannerEmailOptIn", false);
