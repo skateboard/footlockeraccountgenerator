@@ -1,6 +1,6 @@
 <h1 align="center">Footlocker Account Generator</h1>
 <div align="center">
-	<strong>A open sourced footlocker account generator</strong>
+	<strong>An open sourced footlocker account generator</strong>
 </div>
 <br />
 
