@@ -1,4 +1,7 @@
 .gradle
 .idea
+build
 gradle
-.DS_STORE
+tokens
+credentials.json
+config.json
